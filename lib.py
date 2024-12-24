@@ -16,7 +16,8 @@ DB_DIR.mkdir(parents=True, exist_ok=True)
 
 DB_PATH = Path(DB_DIR, "db.json")
 
-COVERS_DIR = Path(DATA_DIR, "covers")
+PUBLIC_DIR = Path(Path(__file__).parent.joinpath("web/public"))
+COVERS_DIR = Path(PUBLIC_DIR, "covers")
 
 ORIGINALS_DIR = Path(COVERS_DIR, "originals")
 ORIGINALS_DIR.mkdir(parents=True, exist_ok=True)
@@ -113,6 +114,12 @@ def list_books() -> List[Book]:
     keys = [i["id"] for i in db.all()]
 
     return [Book.from_record(i) for i in keys]
+
+
+def get_book_path(id: str) -> str:
+    book = Book.from_record(id)
+
+    return book.local_path
 
 
 if __name__ == "__main__":

@@ -1,0 +1,38 @@
+---
+const { id, title, creators } = Astro.props;
+---
+
+<div class="book-card">
+    <a href=`/download/${id}.epub`>
+        <img src=`/covers/sm/${id}.jpg` />
+    </a>
+    <figcaption>
+        <p>
+            {title}
+        </p>
+        <p>
+            by {creators.join(", ")}
+        </p>
+    </figcaption>
+</div>
+
+<style>
+    .book-card {
+        width: 200px;
+        margin: 5px;
+        padding: 10px;
+        border: 2px;
+        border-radius: 6px;
+        border-color: white;
+        border-style: solid;
+        
+        img {
+            margin: auto;
+            display: block;
+        }
+
+        figcaption {
+            text-align: center;
+        }
+    }
+</style>

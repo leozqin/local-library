@@ -1,0 +1,39 @@
+---
+import BookCard from "./BookCard.astro";
+
+type Book = {
+    id: string;
+    title: string;
+    creators: Array<string>;
+};
+
+const response = await fetch("http://localhost:8000/list-books");
+const data: Array<Book> = await response.json();
+---
+<section class="books">
+    <div class="book-card-grid">
+        {
+            data.map((data) => (
+                <BookCard
+                    id={data.id}
+                    title={data.title}
+                    creators={data.creators}
+                />
+            ))
+        }
+    </div>
+</section>
+
+<style>
+    .books {
+        display: flex;
+        justify-content: center;
+        vertical-align: middle;
+        position: relative;
+    }
+    .book-card-grid {
+        display: grid;
+        width: 90%;
+        grid-template-columns: repeat(6, 1fr);
+    }
+</style>

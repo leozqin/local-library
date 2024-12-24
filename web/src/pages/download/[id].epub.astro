@@ -1,0 +1,10 @@
+---
+import type { APIRoute } from "astro";
+
+export const get: APIRoute = async function get() {
+    const { id } = Astro.params;
+    const response = await fetch(`http://localhost:8000/download/${id}`);
+    
+    return response
+};
+---

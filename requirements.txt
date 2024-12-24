@@ -1,5 +1,5 @@
 EbookLib==0.18
 pydantic==2.10
-fastapi==0.115.6
+fastapi[standard]==0.115.6
 tinydb==4.8.2
 pillow==11.0.0

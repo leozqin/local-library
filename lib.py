@@ -14,13 +14,14 @@ from tinydb import TinyDB, Query
 logger = getLogger("uvicorn.error")
 
 DATA_DIR = Path(environ.get("DATA_DIR", Path(__file__).parent.joinpath("data")))
-DB_DIR = Path(DATA_DIR, "db")
+DB_DIR = Path(environ.get("DB_DIR", Path(__file__).parent.joinpath("data")))
 DB_DIR.mkdir(parents=True, exist_ok=True)
 
 DB_PATH = Path(DB_DIR, "db.json")
 
-PUBLIC_DIR = Path(Path(__file__).parent.joinpath("web/public"))
-COVERS_DIR = Path(PUBLIC_DIR, "covers")
+COVERS_DIR = Path(
+    environ.get("COVERS_DIR", Path(__file__).parent.joinpath("web/public/covers"))
+)
 
 ORIGINALS_DIR = Path(COVERS_DIR, "originals")
 ORIGINALS_DIR.mkdir(parents=True, exist_ok=True)
@@ -81,7 +82,7 @@ def make_book(path: Path) -> Book:
     book = read_epub(str(path.resolve()))
 
     title, _ = book.get_metadata("DC", "title")[0]
-    creators = [i[0].replace(";","") for i in book.get_metadata("DC", "creator")]
+    creators = [i[0].replace(";", "") for i in book.get_metadata("DC", "creator")]
     language, _ = book.get_metadata("DC", "language")[0]
     cover_image: EpubCover = book.get_item_with_id(
         "cover-image"
@@ -135,7 +136,7 @@ def get_book(id: str) -> Book:
 
 def list_books() -> List[Book]:
     keys = [i["id"] for i in db.all()]
-    
+
     return [Book.from_record(i) for i in keys]
 
 

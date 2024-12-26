@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Self
+from typing import List, Self, Tuple
 from pydantic import BaseModel, computed_field
 from hashlib import md5
 from os import environ
@@ -50,6 +50,11 @@ class Book(BaseModel):
     @property
     def id(self) -> str:
         return md5(self.local_path.encode()).hexdigest()
+    
+    @property
+    def pretty_name(self) -> str:
+        creators = ", ".join(self.creators).replace(";", "")
+        return f"{self.title} - {creators}.epub"
 
     def to_record(self) -> None:
         rec = {"id": self.id, "data": self.model_dump()}
@@ -116,10 +121,10 @@ def list_books() -> List[Book]:
     return [Book.from_record(i) for i in keys]
 
 
-def get_book_path(id: str) -> str:
+def download_book(id: str) -> Tuple[str, str]:
     book = Book.from_record(id)
 
-    return book.local_path
+    return book.local_path, book.pretty_name
 
 
 if __name__ == "__main__":

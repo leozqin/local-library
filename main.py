@@ -12,6 +12,8 @@ def list_books():
 
 @app.get("/download/{id}")
 def download(id: str):
-    path = lib.get_book_path(id)
+    path, filename = lib.download_book(id)
 
-    return FileResponse(path=path, media_type="application/octet-stream")
+    return FileResponse(
+        path=path, media_type="application/octet-stream", filename=filename
+    )

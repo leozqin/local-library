@@ -81,7 +81,7 @@ def make_book(path: Path) -> Book:
     book = read_epub(str(path.resolve()))
 
     title, _ = book.get_metadata("DC", "title")[0]
-    creators = [i[0] for i in book.get_metadata("DC", "creator")]
+    creators = [i[0].replace(";","") for i in book.get_metadata("DC", "creator")]
     language, _ = book.get_metadata("DC", "language")[0]
     cover_image: EpubCover = book.get_item_with_id(
         "cover-image"

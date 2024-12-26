@@ -1,10 +1,17 @@
 ---
 const { id, title, creators, thumbnailName } = Astro.props;
+
+let imagePath;
+if (thumbnailName) {
+    imagePath = `/covers/sm/${thumbnailName}`
+} else {
+    imagePath = "/default_sm.jpg"
+}
 ---
 
 <div class="book-card">
     <a href=`/download/${id}`>
-        <img src=`/covers/sm/${thumbnailName}` />
+        <img src={imagePath} />
     </a>
     <figcaption>
         <p>

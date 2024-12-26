@@ -1,9 +1,20 @@
 from fastapi import FastAPI
 from fastapi.responses import FileResponse
+from fastapi_utilities import repeat_every
+from contextlib import asynccontextmanager
 import lib
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    lib.parse_library()
+    yield
 
+@repeat_every(seconds=60*60)
+async def reparse_library():
+    lib.parse_library()
+
+
+app = FastAPI(lifespan=lifespan)
 
 @app.get("/list-books")
 def list_books():

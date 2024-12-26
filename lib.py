@@ -11,6 +11,8 @@ from ebooklib.epub import read_epub, EpubBook, IMAGE_MEDIA_TYPES, EpubCover
 from ebooklib import ITEM_COVER
 from tinydb import TinyDB, Query
 
+logger = getLogger("uvicorn.error")
+
 DATA_DIR = Path(environ.get("DATA_DIR", Path(__file__).parent.joinpath("data")))
 DB_DIR = Path(DATA_DIR, "db")
 DB_DIR.mkdir(parents=True, exist_ok=True)
@@ -98,20 +100,31 @@ def make_book(path: Path) -> Book:
         book.thumbnail_name = file_name
         img_path = Path(ORIGINALS_DIR, file_name)
 
-        with open(img_path, "wb") as fp:
-            fp.write(cover_image.get_content())
+        if not img_path.exists():
+            with open(img_path, "wb") as fp:
+                fp.write(cover_image.get_content())
+        else:
+            logger.debug(f"Skipping {img_path} because it already exists")
 
         with open_img(img_path) as img:
             for size, outpath in ((SM, SM_DIR), (MD, MD_DIR), (LG, LG_DIR)):
-                thumb = img.copy()
-                thumb.thumbnail(size)
-                thumb.save(Path(outpath, file_name))
+                out_path = Path(outpath, file_name)
+                if not out_path.exists():
+                    thumb = img.copy()
+                    thumb.thumbnail(size)
+                    thumb.save(out_path)
+                else:
+                    logger.debug(f"Skipping {out_path} because it already exists")
+    else:
+        logger.debug(f"No cover found for {book.title}")
 
     return book
 
 
 def parse_library():
+    logger.info("Starting library parsing!")
     for file in glob("**/*.epub", root_dir=DATA_DIR.resolve(), recursive=True):
+        logger.debug(f"Parsing library file {file}")
         book = make_book(Path(DATA_DIR, file))
         book.to_record()
 

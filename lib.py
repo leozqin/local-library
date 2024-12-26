@@ -1,9 +1,10 @@
 from pathlib import Path
-from typing import List, Self, Tuple
+from typing import List, Self, Tuple, Optional
 from pydantic import BaseModel, computed_field
 from hashlib import md5
 from os import environ
 from glob import glob
+from logging import getLogger
 
 from PIL.Image import open as open_img, Image
 from ebooklib.epub import read_epub, EpubBook, IMAGE_MEDIA_TYPES, EpubCover
@@ -44,13 +45,14 @@ class Book(BaseModel):
     title: str
     creators: List[str]
     local_path: str
+    thumbnail_name: Optional[str] = None
     language: str = "en"
 
     @computed_field
     @property
     def id(self) -> str:
         return md5(self.local_path.encode()).hexdigest()
-    
+
     @property
     def pretty_name(self) -> str:
         creators = ", ".join(self.creators).replace(";", "")
@@ -79,7 +81,9 @@ def make_book(path: Path) -> Book:
     title, _ = book.get_metadata("DC", "title")[0]
     creators = [i[0] for i in book.get_metadata("DC", "creator")]
     language, _ = book.get_metadata("DC", "language")[0]
-    cover_image: EpubCover = book.get_item_with_id("cover-image")
+    cover_image: EpubCover = book.get_item_with_id(
+        "cover-image"
+    ) or book.get_item_with_id("cover")
 
     book = Book(
         title=title,
@@ -91,6 +95,7 @@ def make_book(path: Path) -> Book:
     if cover_image:
         file_ext = cover_image.file_name.split(".")[-1]
         file_name = f"{book.id}.{file_ext}"
+        book.thumbnail_name = file_name
         img_path = Path(ORIGINALS_DIR, file_name)
 
         with open(img_path, "wb") as fp:
@@ -117,7 +122,7 @@ def get_book(id: str) -> Book:
 
 def list_books() -> List[Book]:
     keys = [i["id"] for i in db.all()]
-
+    
     return [Book.from_record(i) for i in keys]
 
 

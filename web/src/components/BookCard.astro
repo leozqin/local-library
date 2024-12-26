@@ -1,10 +1,10 @@
 ---
-const { id, title, creators } = Astro.props;
+const { id, title, creators, thumbnailName } = Astro.props;
 ---
 
 <div class="book-card">
     <a href=`/download/${id}`>
-        <img src=`/covers/sm/${id}.jpg` />
+        <img src=`/covers/sm/${thumbnailName}` />
     </a>
     <figcaption>
         <p>

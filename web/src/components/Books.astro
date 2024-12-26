@@ -4,6 +4,7 @@ import BookCard from "./BookCard.astro";
 type Book = {
     id: string;
     title: string;
+    thumbnail_name: string;
     creators: Array<string>;
 };
 
@@ -18,6 +19,7 @@ const data: Array<Book> = await response.json();
                     id={data.id}
                     title={data.title}
                     creators={data.creators}
+                    thumbnailName={data.thumbnail_name}
                 />
             ))
         }
@@ -30,10 +32,11 @@ const data: Array<Book> = await response.json();
         justify-content: center;
         vertical-align: middle;
         position: relative;
+        margin: auto;
     }
     .book-card-grid {
         display: grid;
         width: 90%;
-        grid-template-columns: repeat(6, 1fr);
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     }
 </style>

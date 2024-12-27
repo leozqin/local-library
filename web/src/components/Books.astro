@@ -8,9 +8,14 @@ type Book = {
     creators: Array<string>;
 };
 
-const response = await fetch("http://localhost:8000/list-books");
+const apiEndpoint: string = import.meta.env.API_BASE_URL
+    ? import.meta.env.API_BASE_URL
+    : "http://api";
+
+const response = await fetch(`${apiEndpoint}/list-books`);
 const data: Array<Book> = await response.json();
 ---
+
 <section class="books">
     <div class="book-card-grid">
         {

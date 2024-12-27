@@ -8,8 +8,6 @@ services:
       - DATA_DIR=/data
       - DB_DIR=/db
       - COVERS_DIR=/covers
-    ports:
-      - 8000:8000
     volumes:
       - /home/leo/local-library/data:/data:ro
       - db:/db:rw
@@ -21,10 +19,12 @@ services:
     build:
       context: .
       dockerfile: web/Dockerfile
+    environment:
+      - API_BASE_URL=http://api
     ports:
       - 4321:4321
     volumes:
-      - covers:/app/public/covers:ro
+      - covers:/app/dist/client/covers:ro
     networks:
       - local-library
 

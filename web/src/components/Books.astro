@@ -36,12 +36,15 @@ const data: Array<Book> = await response.json();
         display: flex;
         justify-content: center;
         vertical-align: middle;
-        position: relative;
-        margin: auto;
+        align-items: center;
+        margin-right: auto;
+        margin-left: auto;
     }
     .book-card-grid {
         display: grid;
-        width: 90%;
-        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        width: 95%;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        column-gap: 10px;
+        row-gap: 2px;
     }
 </style>

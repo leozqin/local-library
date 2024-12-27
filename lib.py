@@ -95,7 +95,7 @@ def make_book(path: Path) -> Book:
         language=language,
     )
 
-    if cover_image:
+    if cover_image and cover_image.media_type in IMAGE_MEDIA_TYPES:
         file_ext = cover_image.file_name.split(".")[-1]
         file_name = f"{book.id}.{file_ext}"
         book.thumbnail_name = file_name

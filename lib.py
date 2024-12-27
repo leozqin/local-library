@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import List, Self, Tuple, Optional
+from typing import List, Self, Tuple, Optional, Union
 from pydantic import BaseModel, computed_field
 from hashlib import md5
 from os import environ
@@ -7,8 +7,7 @@ from glob import glob
 from logging import getLogger
 
 from PIL.Image import open as open_img, Image
-from ebooklib.epub import read_epub, EpubBook, IMAGE_MEDIA_TYPES, EpubCover
-from ebooklib import ITEM_COVER
+from ebooklib.epub import read_epub, EpubBook, IMAGE_MEDIA_TYPES, EpubCover, EpubImage
 from tinydb import TinyDB, Query
 
 logger = getLogger("uvicorn.error")
@@ -93,9 +92,21 @@ def make_book(path: Path) -> Book:
     title, _ = book.get_metadata("DC", "title")[0]
     creators = [i[0].replace(";", "") for i in book.get_metadata("DC", "creator")]
     language, _ = book.get_metadata("DC", "language")[0]
-    cover_image: EpubCover = book.get_item_with_id(
-        "cover-image"
-    ) or book.get_item_with_id("cover")
+
+    items = book.get_items()
+    cover_items = [
+        book.get_item_with_id("cover-image"),
+        book.get_item_with_id("cover"),
+        book.get_item_with_id("my-cover-image"),
+    ]
+
+    for i in items:
+        if (
+            isinstance(i, EpubCover)
+            or "cover" in i.get_id()
+            or i.get_name() == "images/title.jpg"
+        ) and i.media_type in IMAGE_MEDIA_TYPES:
+            cover_items.append(i)
 
     book = Book(
         title=title,
@@ -104,7 +115,9 @@ def make_book(path: Path) -> Book:
         language=language,
     )
 
-    if cover_image and cover_image.media_type in IMAGE_MEDIA_TYPES:
+    cover_items = [i for i in cover_items if i]
+    if cover_items:
+        cover_image: Union[EpubCover, EpubImage] = cover_items[0]
         file_ext = cover_image.file_name.split(".")[-1]
         file_name = f"{book.id}.{file_ext}"
         book.thumbnail_name = file_name

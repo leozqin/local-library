@@ -2,6 +2,7 @@ from fastapi import FastAPI
 from fastapi.responses import FileResponse
 from fastapi_utilities import repeat_every
 from contextlib import asynccontextmanager
+from random import shuffle
 import lib
 
 @asynccontextmanager
@@ -18,7 +19,10 @@ app = FastAPI(lifespan=lifespan)
 
 @app.get("/list-books")
 def list_books():
-    return lib.list_books()
+    books = lib.list_books()
+    shuffle(books)
+    
+    return books
 
 
 @app.get("/download/{id}")

@@ -3,43 +3,63 @@ const { id, title, creators, thumbnailName } = Astro.props;
 
 let imagePath;
 if (thumbnailName) {
-    imagePath = `/covers/sm/${thumbnailName}`
+    imagePath = `/covers/sm/${thumbnailName}`;
 } else {
-    imagePath = "/default_sm.jpg"
+    imagePath = "/default_sm.jpg";
 }
 ---
 
 <div class="book-card">
-    <a href=`/download/${id}`>
-        <img src={imagePath} />
-    </a>
-    <figcaption>
-        <p>
-            {title}
-        </p>
-        <p>
-            by {creators.join(", ")}
-        </p>
-    </figcaption>
+    <figure>
+        <a href=`/download/${id}` >
+            <img src={imagePath} alt=`The cover art for ${title}` class="cover"/>
+        </a>
+        <div class="title">
+            <p class="title-component">
+                {title}
+            </p>
+            <p class="title-component">
+                by {creators.join(", ")}
+            </p>
+        </div>
+    </figure>
 </div>
 
 <style>
     .book-card {
-        width: 200px;
-        margin: 5px;
-        padding: 10px;
+        max-width: 200px;
+        margin: 3px;
+        padding: 2px;
         border: 2px;
         border-radius: 6px;
         border-color: white;
         border-style: solid;
-        
-        img {
-            margin: auto;
-            display: block;
-        }
-
-        figcaption {
-            text-align: center;
-        }
+        display: flex;
+        justify-content: center;
     }
+
+    .cover {
+        border: 1px;
+        border-radius: 6px;
+        border-style: solid;
+        border-color: white;
+        display: flex;
+        justify-content: center;
+        width: 175px;
+    }
+
+    .title {
+        align-self: baseline;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .title-component {
+        margin: auto;
+        padding: 10px;
+        text-align: center;
+        line-height: 1.1rem;
+        
+    }
+
 </style>

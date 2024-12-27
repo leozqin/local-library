@@ -44,6 +44,10 @@ class BookNotFoundException(Exception):
     pass
 
 
+class BookNotParseableException(Exception):
+    pass
+
+
 class Book(BaseModel):
     title: str
     creators: List[str]
@@ -79,7 +83,12 @@ class Book(BaseModel):
 
 
 def make_book(path: Path) -> Book:
-    book = read_epub(str(path.resolve()))
+    try:
+        book = read_epub(str(path.resolve()))
+    except Exception as e:
+        raise BookNotParseableException(
+            f"Book at path {path} was not parseable!"
+        ) from e
 
     title, _ = book.get_metadata("DC", "title")[0]
     creators = [i[0].replace(";", "") for i in book.get_metadata("DC", "creator")]
@@ -126,8 +135,11 @@ def parse_library():
     logger.info("Starting library parsing!")
     for file in glob("**/*.epub", root_dir=DATA_DIR.resolve(), recursive=True):
         logger.debug(f"Parsing library file {file}")
-        book = make_book(Path(DATA_DIR, file))
-        book.to_record()
+        try:
+            book = make_book(Path(DATA_DIR, file))
+            book.to_record()
+        except Exception as e:
+            logger.info(f"Failed to parse library file {file} with error {e}")
 
 
 def get_book(id: str) -> Book:

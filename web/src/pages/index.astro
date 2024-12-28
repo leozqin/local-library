@@ -1,8 +1,16 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Books from '../components/Books.astro';
+import Header from '../components/Header.astro';
 ---
-
+<Header />
 <Layout>
 	<Books />
 </Layout>
+
+<style>
+	body {
+		margin: 0;
+		padding: 0;
+	}
+</style>

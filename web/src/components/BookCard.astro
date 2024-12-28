@@ -1,5 +1,6 @@
 ---
 const { id, title, creators, thumbnailName } = Astro.props;
+import { Image } from "astro:assets";
 
 let imagePath;
 if (thumbnailName) {
@@ -11,8 +12,13 @@ if (thumbnailName) {
 
 <div class="book-card">
     <figure>
-        <a href=`/download/${id}` >
-            <img src={imagePath} alt=`The cover art for ${title}` class="cover"/>
+        <a href=`/download/${id}`>
+            <img
+                src={imagePath}
+                alt=`The cover art for ${title}`
+                loading="lazy"
+                class="cover"
+            />
         </a>
         <div class="title">
             <p class="title-component">
@@ -32,7 +38,7 @@ if (thumbnailName) {
         padding: 2px;
         border: 2px;
         border-radius: 6px;
-        border-color: white;
+        border-color: darkslategrey;
         border-style: solid;
         display: flex;
         justify-content: center;
@@ -42,7 +48,7 @@ if (thumbnailName) {
         border: 1px;
         border-radius: 6px;
         border-style: solid;
-        border-color: white;
+        border-color: midnightblue;
         display: flex;
         justify-content: center;
         width: 175px;
@@ -59,7 +65,5 @@ if (thumbnailName) {
         padding: 10px;
         text-align: center;
         line-height: 1.1rem;
-        
     }
-
 </style>

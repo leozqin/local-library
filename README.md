@@ -1,5 +1,5 @@
 # Local Library
-Local Library is a simple read-only ebook library that indexes your `epub` ebooks against a read-only file system and provides a nice UI to browse and download them.
+Local Library is a simple read-only ebook library that indexes your `epub` ebooks against a read-only file system and provides a nice UI to browse and download them. For some more color on the intent and architecture of this application, [see this blog post](https://www.leozqin.me/posts/local-library/).
 
 ![a screenshot of the main (and only) page of local-library](assets/library.png)
 
@@ -13,7 +13,7 @@ To start the web interface, first install nodejs 22. Then, navigate to `web` and
 
 To run both the API and web interface at the same time, you'll need to create separate terminal sessions, of course.
 
-If you're using nix, you can install pre-reqs by doing `nix-shell nodejs_22 python312`.
+If you're using nix, you can install pre-reqs by doing `nix-shell -p nodejs_22 python312`.
 
 ## Docker
 Modify [the Compose stack](docker-compose.yml) to your heart's content, and then run `docker compose up` to start the app.

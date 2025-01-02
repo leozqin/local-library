@@ -8,11 +8,13 @@ type Book = {
     creators: Array<string>;
 };
 
+const sort = Astro.url.searchParams.get("sort") || "random";
+
 const apiEndpoint: string = import.meta.env.API_BASE_URL
     ? import.meta.env.API_BASE_URL
     : "http://api";
 
-const response = await fetch(`${apiEndpoint}/list-books`);
+const response = await fetch(`${apiEndpoint}/list-books?sort=${sort}`);
 const data: Array<Book> = await response.json();
 ---
 

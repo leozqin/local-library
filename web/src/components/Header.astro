@@ -1,7 +1,11 @@
+---
+import SortOption from "./SortOption.astro"
+---
 <section class="library-header">
-    <h1>
+    <h1 class="header-items">
         <a href="/"><i>Local Library</i></a>
     </h1>
+    <SortOption />
 </section>
 <style>
     * {
@@ -12,8 +16,8 @@
         padding-left: 2rem;
         background-color: black;
         height: 100%;
-        padding-top: 1rem;
-        padding-bottom: 1rem;
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
         margin-bottom: 0.5rem;
         position: sticky;
         top: 0;
@@ -24,5 +28,8 @@
             text-decoration: none;
             color: white;
         }
+    }
+    .header-items {
+        display: inline-block;
     }
 </style>

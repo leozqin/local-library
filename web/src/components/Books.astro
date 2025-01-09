@@ -9,7 +9,7 @@ type Book = {
     creators: Array<string>;
 };
 
-const sort = Astro.url.searchParams.get("sort") || "random";
+const sort = Astro.url.searchParams.get("sort") || "recent";
 
 const apiEndpoint: string = import.meta.env.API_BASE_URL
     ? import.meta.env.API_BASE_URL

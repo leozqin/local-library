@@ -52,6 +52,7 @@ class Book(BaseModel):
     creators: List[str]
     local_path: str
     thumbnail_name: Optional[str] = None
+    last_updated: float
     language: str = "en"
 
     @computed_field
@@ -83,7 +84,9 @@ class Book(BaseModel):
 
 def make_book(path: Path) -> Book:
     try:
-        book = read_epub(str(path.resolve()))
+        file = path.resolve()
+        book = read_epub(str(file))
+        last_updated = file.stat().st_mtime
     except Exception as e:
         raise BookNotParseableException(
             f"Book at path {path} was not parseable!"
@@ -113,6 +116,7 @@ def make_book(path: Path) -> Book:
         local_path=str(path.resolve()),
         creators=creators,
         language=language,
+        last_updated=last_updated
     )
 
     cover_items = [i for i in cover_items if i]

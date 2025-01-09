@@ -14,6 +14,7 @@ class SortMethod(str, Enum):
     random = "random"
     az = "az"
     za = "za"
+    recent = "recent"
 
 class ListBooksQuery(BaseModel):
     sort: Optional[SortMethod] = Field(Query(default=SortMethod.random))
@@ -31,7 +32,7 @@ async def reparse_library():
 app = FastAPI(lifespan=lifespan)
 
 @app.get("/list-books")
-def list_books(sort: SortMethod = SortMethod.random):
+def list_books(sort: SortMethod = SortMethod.recent):
     books = lib.list_books()
 
     if sort is SortMethod.random:
@@ -40,6 +41,8 @@ def list_books(sort: SortMethod = SortMethod.random):
         books.sort(key=attrgetter("title"), reverse=False)
     elif sort is SortMethod.za:
         books.sort(key=attrgetter("title"), reverse=True)
+    elif sort is SortMethod.recent:
+        books.sort(key=attrgetter("last_updated"), reverse=True)
 
     return books
 

@@ -1,5 +1,6 @@
 ---
 import BookCard from "./BookCard.astro";
+import Stats from "./Stats.astro";
 
 type Book = {
     id: string;
@@ -8,7 +9,7 @@ type Book = {
     creators: Array<string>;
 };
 
-const sort = Astro.url.searchParams.get("sort") || "random";
+const sort = Astro.url.searchParams.get("sort") || "recent";
 
 const apiEndpoint: string = import.meta.env.API_BASE_URL
     ? import.meta.env.API_BASE_URL
@@ -16,8 +17,9 @@ const apiEndpoint: string = import.meta.env.API_BASE_URL
 
 const response = await fetch(`${apiEndpoint}/list-books?sort=${sort}`);
 const data: Array<Book> = await response.json();
+const books: Number = data.length
 ---
-
+<Stats books={books} />
 <section class="books">
     <div class="book-card-grid">
         {

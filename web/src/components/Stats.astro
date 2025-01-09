@@ -1,0 +1,18 @@
+---
+const { books } = Astro.props
+---
+<div class="stats-block">
+    <p>You have {books} books!</p>
+</div>
+
+<style>
+    .stats-block {
+        width: 50%;
+        align-self: auto;
+        align-items: center;
+        margin-right: auto;
+        margin-left: auto;
+        display: flex;
+        justify-content: center;
+    }
+</style>
